@@ -1,3 +1,4 @@
+
 var svg = d3.select("svg"),
     margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = +svg.attr("width") - margin.left - margin.right,
@@ -18,7 +19,7 @@ d3.csv("frequencia.csv", function(d) {
 
   x.domain(data.map(function(d) { return d.letra; }));
   y.domain([0, d3.max(data, function(d) { return d.frequencia; })]);
-  y2.domain([0, d3.max(data, function(d) { return d.frequencia; })]);
+  y2.domain([0, d3.max(data, function(d) { return d.pt; })]).nice();
 
   g.append("g")
       .attr("class", "axis axis--x")
@@ -30,7 +31,19 @@ d3.csv("frequencia.csv", function(d) {
       .call(d3.axisLeft(y).ticks(10, "%"))
     .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
+      .attr("y", 10 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "end")
+      .text("Frequency");
+
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y2).ticks(10, "%"))
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 10 - margin.left + height/2)
+      .attr("x",0 - (height / 2))
       .attr("dy", "0.71em")
       .attr("text-anchor", "end")
       .text("Frequency");
