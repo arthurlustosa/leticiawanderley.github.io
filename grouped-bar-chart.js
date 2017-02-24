@@ -1,25 +1,21 @@
-<!DOCTYPE html>
-<style>
+var
+  margin = {top: 20, right: 20, bottom: 110, left: 40},
+  margin2 = {top: 430, right: 20, bottom: 30, left: 40},
+  width = 1000 - margin.left - margin.right,
+  height = 500 - margin.top - margin.bottom,
+  height2 = 500 - margin2.top - margin2.bottom;
 
-.axis .domain {
-  display: none;
-}
+var svg = d3.select("#groupeBarChart")
+  .append("svg")
+  .attr('version', '1.1')
+  .attr('viewBox', '0 0 '+(width + margin.left + margin.right)+' '+(height + margin.top + margin.bottom))
+  .attr('width', '100%');
+  g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-.axis:hover{
-  fill:brown;
-}
-
-
-</style>
-<svg width="960" height="500"></svg>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script>
-
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var div = d3.select("#groupeBarChart").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 1);
 
 var x0 = d3.scaleBand()
     .rangeRound([0, width])
@@ -77,16 +73,6 @@ var z = d3.scaleOrdinal()
       .attr("text-anchor", "start")
       .text("Frequência Relativa");
 
-			// .append("text")
-			// 	.attr("transform", "rotate(-90)")
-			// 	.attr("y", 10 - margin.left + height/2)
-			// 	.attr("x",0 - (height / 2))
-			// 	.attr("font-size", "14px")
-			// 	.attr("dy", "0.01em")
-			// 	.attr("text-anchor", "middle")
-			// 	.attr("fill", "#000")
-			// 	.text("Frequência relativa");
-
   var legend = g.append("g")
       .attr("font-family", "sans-serif")
       .attr("font-size", 10)
@@ -107,6 +93,7 @@ var z = d3.scaleOrdinal()
       .attr("y", 9.5)
       .attr("dy", "0.32em")
       .text(function(d) { return d; });
+
 });
 
 function type(d, i, columns) {
@@ -114,5 +101,3 @@ function type(d, i, columns) {
   d.total = t;
   return d;
 }
-
-</script>
