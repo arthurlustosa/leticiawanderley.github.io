@@ -11,7 +11,7 @@ var svg = d3.select("#stackedBarChart")
   .attr('viewBox', '0 0 '+(width + margin.left + margin.right)+' '+(height + margin.top + margin.bottom))
   .attr('width', '100%');
   g = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");  
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var div = d3.select("#stackedBarChart").append("div")
   .attr("class", "tooltip")
@@ -23,10 +23,7 @@ var x = d3.scaleBand()
     .align(0.3);
 
 var y = d3.scaleLinear()
-    .rangeRound([height/2, 0]);
-
-var y2 = d3.scaleLinear()
-    .rangeRound([height/2, height]);
+    .rangeRound([height, 0]);
 
 var z = d3.scaleOrdinal(["#1BC0A2", "#C01B5A"]);
 
@@ -39,25 +36,29 @@ d3.csv("frequencia.csv", type, function(error, data) {
 
   x.domain(data.map(function(d) { return d.letra; }));
   y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
-  y2.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
   z.domain(data.columns.slice(1));
 
   g.selectAll(".serie")
-    .data(data)
+    .data(stack.keys(data.columns.slice(1))(data))
+    .enter().append("g")
+      .attr("class", "serie")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("rect")
+    .data(function(d) { return d; })
     .enter().append("rect")
-      .attr("x", function(d) { return x(d.letra); })
+      .attr("x", function(d) { return x(d.data.letra); })
       .attr("y", function(d) { return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
       .attr("width", x.bandwidth())
       .on("mouseover", function(d) {
-        var frequencia = d[0] == 0 ? ('aleatória:</label> <span>' + d.frequencia) : ('pt-br:</label> <span>'  + d.pt);
+        var frequencia = d[0] == 0 ? ('aleatória:</label> <span>' + d.data.frequencia) : ('pt-br:</label> <span>'  + d.data.pt);
         div.transition()
           .duration(200)
           .style("opacity", .9);
         div.html(
           '<label>Frequência '+ frequencia +'%</span>'
-        )     
-          .style("left", (d3.event.pageX - 2 * margin.left) + "px")             
+        )
+          .style("left", (d3.event.pageX - 2 * margin.left) + "px")
           .style("top", (d3.event.pageY) + "px");
       });
 
@@ -89,20 +90,6 @@ d3.csv("frequencia.csv", type, function(error, data) {
       .attr("fill", "#000")
       .text("Frequência relativa");
 
-  g.append("g")
-      .attr("class", "axis axis--y")
-      .style("font", "14px sans-serif")
-      .call(d3.axisLeft(y2).ticks(10, "s"))
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 10 - margin.left + height/2)
-      .attr("x",0 - (height / 2))
-      .attr("font-size", "14px")
-      .attr("dy", "0.01em")
-      .attr("text-anchor", "middle")
-      .attr("fill", "#000")
-      .text("Frequência relativa");
- 
   var legend = g.selectAll(".legend")
     .data(["Textos Aleatórios", "Língua Portuguesa"])
     .enter().append("g")
