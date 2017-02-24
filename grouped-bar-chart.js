@@ -30,7 +30,7 @@ var y = d3.scaleLinear()
 var z = d3.scaleOrdinal()
     .range(["#e74c3c", "#1abc9c"]);
 
-		d3.csv("frequencia.csv", type, function(error, data) {
+	d3.csv("frequencia.csv", type, function(error, data) {
 		  if (error) throw error;
 
 	data.sort(function(a, b) { return b.total - a.total; });
@@ -55,6 +55,14 @@ var z = d3.scaleOrdinal()
       .attr("height", function(d) { return height - y(d.value); })
       .attr("fill", function(d) { return z(d.key); });
 
+    svg.append("text")
+        .attr("transform",
+              "translate(" + (width/2) + " ," + (height + margin.bottom - 55) + ")")
+        .style("text-anchor", "middle")
+        .attr("font-size", "14px")
+        .attr("fill", "#000")
+        .text("Letra");
+
   g.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(0," + height + ")")
@@ -69,7 +77,7 @@ var z = d3.scaleOrdinal()
       .attr("y", 10 - margin.left)
       .attr("dy", "0.32em")
       .attr("fill", "#000")
-      .attr("font-weight", "bold")
+      .attr("font-size", "14px")
       .attr("text-anchor", "start")
       .text("Frequência Relativa");
 
@@ -78,9 +86,11 @@ var z = d3.scaleOrdinal()
       .attr("font-size", 10)
       .attr("text-anchor", "end")
     .selectAll("g")
-    .data(keys.slice().reverse())
+    .data(["Textos Aleatórios", "Língua Portuguesa"])
     .enter().append("g")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+
 
   legend.append("rect")
       .attr("x", width - 19)
