@@ -6,6 +6,14 @@
   fill: brown;
 }
 
+.bar2 {
+    fill: red;
+}
+
+.bar2:hover{
+  fill:brown;
+}
+
 .axis--x path {
   display: none;
 }
